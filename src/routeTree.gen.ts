@@ -11,9 +11,16 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as UserRouteElementsImport } from './routes/userRouteElements'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const UserRouteElementsRoute = UserRouteElementsImport.update({
+  id: '/userRouteElements',
+  path: '/userRouteElements',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +39,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/userRouteElements': {
+      id: '/userRouteElements'
+      path: '/userRouteElements'
+      fullPath: '/userRouteElements'
+      preLoaderRoute: typeof UserRouteElementsImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/userRouteElements': typeof UserRouteElementsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/userRouteElements': typeof UserRouteElementsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/userRouteElements': typeof UserRouteElementsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/userRouteElements'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/userRouteElements'
+  id: '__root__' | '/' | '/userRouteElements'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UserRouteElementsRoute: typeof UserRouteElementsRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UserRouteElementsRoute: UserRouteElementsRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.ts",
       "children": [
-        "/"
+        "/",
+        "/userRouteElements"
       ]
     },
     "/": {
       "filePath": "index.ts"
+    },
+    "/userRouteElements": {
+      "filePath": "userRouteElements.tsx"
     }
   }
 }
