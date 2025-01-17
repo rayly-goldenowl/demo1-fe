@@ -7,7 +7,7 @@ import { signinAccount } from "../../services/auth";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 interface FormData {
 	email: string;
 	password: string;
@@ -46,9 +46,11 @@ export default function Signin() {
 		});
 	});
 
-	const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
+	const handleGoogleSuccess = (credentialResponse: any) => {
+		const { credential } = credentialResponse;
+
 		fetch(
-			`http://localhost:3000/api/v1/auth/users/auth/google_oauth2/callback?code=${credentialResponse}`,
+			`http://localhost:3000/api/v1/auth/users/auth/google_oauth2/callback?code=${credential}`,
 			{
 				method: "POST",
 				headers: {
