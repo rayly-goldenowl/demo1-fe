@@ -1,28 +1,32 @@
-import { createRouter } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import { routeTree } from "./routeTree.gen.ts";
 import "./styles/tailwind.css";
-import './common/i18n'
-
-const router = createRouter({ routeTree });
-
-declare module "@tanstack/react-router" {
-	interface Register {
-		// This infers the type of our router and registers it across your entire project
-		router: typeof router;
-	}
-}
-
+import "./common/i18n";
+import { BrowserRouter } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+		},
+	},
+});
+const clientid =
+	"1052714305078-bia0hgeslimmguuje7vkagiqro85e9u1.apps.googleusercontent.com";
 const rootElement = document.querySelector("#root") as Element;
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<React.StrictMode>
-			<React.Suspense fallback="loading">
-				<App router={router} />
-			</React.Suspense>
+			<GoogleOAuthProvider clientId={clientid}>
+				<BrowserRouter>
+					<QueryClientProvider client={queryClient}>
+						<App />
+					</QueryClientProvider>
+				</BrowserRouter>
+			</GoogleOAuthProvider>
 		</React.StrictMode>
 	);
 }
